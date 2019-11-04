@@ -1,0 +1,16 @@
+version: '3'
+services:
+
+    default2influx:
+        container_name: defaultinflux
+        image: 'thinkfree84/mqtt2influxbridge'
+        build:
+                context: .
+                dockerfile: Dockerfile
+        restart: always
+        environment:
+            - MQTT2INFLUXBRIDGE_NAME=default
+            - MQTT2INFLUXBRIDGE_BROKER=mosquitto
+            - MQTT2INFLUXBRIDGE_TOPIC=default
+            - MQTT2INFLUXBRIDGE_INFLUX=default
+            - MQTT2INFLUXBRIDGE_DATABASE=default
