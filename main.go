@@ -80,7 +80,17 @@ func main() {
 
 func writeData(ip, influxDatabase, key string, value interface{}) {
 
-	body := strings.NewReader(key + " value=" + string(value.([]byte)))
+	valstring := string(value.([]byte))
+
+	if valstring == "true" || valstring == "TRUE" || valstring == "True" {
+		valstring = "1"
+	}
+
+	if valstring == "false" || valstring == "FALSE" || valstring == "False" {
+		valstring = "0"
+	}
+
+	body := strings.NewReader(key + " value=" + valstring)
 	req, err := http.NewRequest("POST", "http://"+ip+":8086/write?db="+influxDatabase, body)
 	if err != nil {
 		log.Println(err)
@@ -94,7 +104,7 @@ func writeData(ip, influxDatabase, key string, value interface{}) {
 		return
 	} else {
 		defer resp.Body.Close()
-		log.Println("Written data to influx :", key, "->", string(value.([]byte)))
+		log.Println("Written data to influx :", key, "->", valstring)
 		body, _ := ioutil.ReadAll(resp.Body)
 		log.Println(string(body))
 	}
